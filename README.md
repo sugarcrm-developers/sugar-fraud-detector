@@ -1,6 +1,6 @@
 # Sugar CRM x Amazon Fraud Detector
 
-SugarCRM Amazon Fraud Detector is a NodeJS app that automates the fraud detection workflow by creating and tearing down AWS resources. This Node app uses a [standard architecture](https://developer.sugarcrm.com/getting-started) that should be really easy to follow and most importantly, it takes care of all the dependencies that are required while setting up AWS.
+SugarCRM Amazon Fraud Detector is a NodeJS app that automates the fraud detection workflow by creating and tearing down AWS resources. This Node app uses a [standard architecture](https://softwareontheroad.com/ideal-nodejs-project-structure/) that should be really easy to follow and most importantly, it takes care of all the dependencies that are required while setting up AWS.
 
 ## Contents
 
@@ -40,6 +40,8 @@ There are two types of configuration for this project to work, one is related to
 ### AWS SDK
 
 AWS access and secret keys were provided by step five when creating a new user, you should have them, just copy them and place on those placeholders down below as well as choose a region where you’d like to have your Fraud Detection setup.
+
+If you dont have or lost your access/secret keys, check [this post](https://aws.amazon.com/blogs/security/how-to-find-update-access-keys-password-mfa-aws-management-console/), it helps you to generate a new one.
 
 As part of this project we've provided a template called ```.env-template``` that you can rename it to ```.env``` and update with your data accordingly.
 

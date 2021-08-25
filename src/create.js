@@ -12,7 +12,7 @@ async function start() {
   const sugarS3 = new SugarS3(config);
   const { iamRoleName } = config.fraudDetector;
   await sugarS3.createBucketIfNotExists();
-  //if you'd like to upload the folder with all files within just uncommend this and comment the individual uploads
+  //if you'd like to upload the folder with all files within just uncomment this and comment the individual uploads
   // await sugarS3.uploadFolder(config.fraudDetector.training.datasetFolder);
 
   await sugarIAM.ensureRoleAndPolicy();

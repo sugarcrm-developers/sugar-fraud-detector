@@ -6,11 +6,11 @@ To contribute,
 1. Work on your changes within a topic branch.
 1. Create a pull request
 
-Pull requests are accepted under the discretion of the Professor M School maintainer(s). Improve the chances your PR will be merged by following the requirements and guidelines below. For any questions, please e-mail developers@sugarcrm.com.
+Pull requests are accepted under the discretion of the Sugar-Fraud-Detector maintainer(s). Improve the chances your PR will be merged by following the requirements and guidelines below. For any questions, please e-mail developers@sugarcrm.com.
 
 ## REQUIREMENTS
 
-- By creating a pull request, you are agreeing to [SugarCRM Open Source Contributor terms](https://github.com/sugarcrm/school/blob/master/docs/CONTRIBUTOR_TERMS.pdf).
+- By creating a pull request, you are agreeing to [SugarCRM Open Source Contributor terms](docs/CONTRIBUTOR_TERMS.pdf).
 
 ## GUIDELINES
 
