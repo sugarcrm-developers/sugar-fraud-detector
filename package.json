@@ -6,9 +6,9 @@
     "teardown": "node src/teardown.js"
   },
   "dependencies": {
-    "@aws-sdk/client-frauddetector": "^3.24.0",
-    "@aws-sdk/client-iam": "^3.24.0",
-    "@aws-sdk/client-s3": "^3.24.0",
+    "@aws-sdk/client-frauddetector": "^3.75.0",
+    "@aws-sdk/client-iam": "^3.75.0",
+    "@aws-sdk/client-s3": "^3.75.0",
     "debug": "^4.3.2",
     "dotenv": "^10.0.0",
     "install": "^0.13.0",

@@ -58,6 +58,7 @@ module.exports = class BaseService {
         await this.sugarFraudDetector.teardownDetector().catch((e) => console.error('teardownDetector failed, will continue.\n', e));
         await this.sugarFraudDetector.teardownModelVersion().catch((e) => console.error('teardownModelVersion failed, will continue.\n', e));
         await this.sugarFraudDetector.teardownModel().catch((e) => console.error('teardownModel failed, will continue.\n', e));
+        await this.sugarFraudDetector.teardownEventsByEventType().catch((e) => console.error('teardownEventsByEventType failed, will continue.\n', e));
         await this.sugarFraudDetector.teardownEventTypes().catch((e) => console.error('teardownEvents failed, will continue.\n', e));
         await this.sugarFraudDetector.teardownEntityTypes().catch((e) => console.error('teardownEntityTypes failed, will continue.\n', e));
         await this.sugarFraudDetector.teardownOutcomes().catch((e) => console.error('teardownOutcomes failed, will continue.\n', e));
