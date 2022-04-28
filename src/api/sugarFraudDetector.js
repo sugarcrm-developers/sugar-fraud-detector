@@ -414,6 +414,33 @@ module.exports = class SugarFraudDetector {
     throw new Error('Model needs more time to undeploy.')
   }
 
+
+  /**
+   * Tears down event type resources
+   * @returns 
+   */
+   async teardownEventsByEventType() {
+    const { eventType, entityType } = this.fraudDetectorType;
+    const params = {
+      eventTypeName: eventType.name
+    };
+
+    debug('Deleting Events by EventType with ', params);
+    
+    await this.fraudDetector.deleteEventsByEventType(params);
+
+    for (let i = 0; i < 50; i++) { //wait for about 100min to train and deploy
+      const version = await this.fraudDetector.getDeleteEventsByEventTypeStatus(params);
+      debug(`\tDeleting Events by EventType is [${version.eventsDeletionStatus}]`);
+      if (version.eventsDeletionStatus === 'COMPLETE') {
+        return params;
+      }
+      await sleep(2 * 60 * 1000);
+      debug('\tDeleting Events by EventType is not ready COMPLETE, waiting...');
+    }
+    throw new Error('Model needs more time to undeploy.')
+  }
+  
   /**
    * Tears down event type resources
    * @returns 
