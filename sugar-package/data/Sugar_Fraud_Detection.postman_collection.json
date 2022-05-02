@@ -1,0 +1,643 @@
+{
+	"info": {
+		"_postman_id": "9a0caa8d-773f-4c10-a733-f296dea8dd8b",
+		"name": "Sugar Fraud Detection",
+		"description": "See https://github.com/sugarcrm-developers/sugar-fraud-detector for more information.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Authenticate",
+			"item": [
+				{
+					"name": "Authenticate",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"var access_token = jsonData.access_token;",
+									"",
+									"tests[\"Successful POST request\"] = responseCode.code === 200;",
+									"tests[\"access_token exists\"] = access_token !== null || access_token !== \"\";",
+									"",
+									"postman.setEnvironmentVariable(\"access_token\", access_token);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n   \"grant_type\":\"password\",\n   \"client_id\":\"sugar\",\n   \"client_secret\":\"\",\n   \"username\":\"{{username}}\",\n   \"password\":\"{{password}}\",\n   \"platform\":\"mobile\"\n}"
+						},
+						"url": {
+							"raw": "{{url}}{{rest_endpoint}}/oauth2/token",
+							"host": [
+								"{{url}}{{rest_endpoint}}"
+							],
+							"path": [
+								"oauth2",
+								"token"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Create EComm Dashboard",
+			"item": [
+				{
+					"name": "Create Home Dashboard",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"var idOfSuperGroup = jsonData.id;",
+									"",
+									"tests[\"Successful POST request\"] = responseCode.code === 200;",
+									"tests[\"id exists\"] = idOfSuperGroup !== null || idOfSuperGroup !== \"\";",
+									"tests[\"name is correct\"] = \"Brotherhood of Deviants\" === jsonData.name;",
+									"",
+									"postman.setEnvironmentVariable(\"SuperGroup_Brotherhood\", idOfSuperGroup);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "OAuth-Token",
+								"value": "{{access_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"E-commerce Activity\",\n    \"dashboard_module\": \"Home\",\n    \"view_name\": \"\",\n    \"default_dashboard\": true,\n    \"my_favorite\": true,\n    \"metadata\": {\n                \"dashlets\": [\n                    {\n                        \"context\": {\n                            \"module\": \"pmse_Inbox\",\n                            \"link\": null,\n                            \"skipFetch\": true\n                        },\n                        \"view\": {\n                            \"limit\": \"15\",\n                            \"date\": \"true\",\n                            \"visibility\": \"group\",\n                            \"label\": \"Processes\",\n                            \"type\": \"dashlet-inbox\",\n                            \"module\": \"pmse_Inbox\",\n                            \"template\": \"tabbed-dashlet\",\n                            \"templateEdit\": \"edit\",\n                            \"last_state\": {\n                                \"defaults\": []\n                            },\n                            \"skipFetch\": true,\n                            \"componentType\": \"view\",\n                            \"link\": null\n                        },\n                        \"autoPosition\": false,\n                        \"x\": \"0\",\n                        \"y\": \"0\",\n                        \"width\": \"5\",\n                        \"height\": \"16\"\n                    },\n                    {\n                        \"context\": {\n                            \"module\": \"FD_SignupFraudDetection\",\n                            \"link\": null,\n                            \"skipFetch\": true\n                        },\n                        \"view\": {\n                            \"label\": \"Latest Signup Attempts\",\n                            \"type\": \"dashablelist\",\n                            \"module\": \"FD_SignupFraudDetection\",\n                            \"last_state\": {\n                                \"id\": \"dashable-list\"\n                            },\n                            \"intelligent\": \"0\",\n                            \"limit\": 5,\n                            \"filter_id\": \"all_records\",\n                            \"display_columns\": [\n                                \"status\",\n                                \"score\",\n                                \"outcome\",\n                                \"ecomm_email\",\n                                \"ip_address\",\n                                \"first_name\",\n                                \"last_name\",\n                                \"ttl_fraud_check\",\n                                \"primary_address_street\",\n                                \"primary_address_city\",\n                                \"primary_address_state\",\n                                \"primary_address_postalcode\",\n                                \"primary_address_country\",\n                                \"phone_home\",\n                                \"phone_mobile\"\n                            ],\n                            \"templateEdit\": \"edit\",\n                            \"auto_refresh\": \"1\",\n                            \"skipFetch\": true,\n                            \"componentType\": \"view\",\n                            \"link\": null\n                        },\n                        \"autoPosition\": false,\n                        \"x\": \"5\",\n                        \"y\": \"0\",\n                        \"width\": \"7\",\n                        \"height\": \"8\"\n                    },\n                    {\n                        \"context\": {\n                            \"module\": \"FD_TransactionFraudDetect\",\n                            \"link\": null\n                        },\n                        \"view\": {\n                            \"label\": \"Latest Payment Transactions\",\n                            \"type\": \"dashablelist\",\n                            \"module\": \"FD_TransactionFraudDetect\",\n                            \"last_state\": {\n                                \"id\": \"dashable-list\"\n                            },\n                            \"intelligent\": \"0\",\n                            \"limit\": 5,\n                            \"filter_id\": \"all_records\",\n                            \"display_columns\": [\n                                \"status\",\n                                \"score\",\n                                \"outcome\",\n                                \"fd_transactionfrauddetect_type\",\n                                \"cc_last_6\",\n                                \"amount\",\n                                \"cc_month_year\",\n                                \"txn_num\",\n                                \"ecomm_email\",\n                                \"ttl_fraud_check\",\n                                \"name\",\n                                \"postal_code\",\n                                \"state\"\n                            ],\n                            \"templateEdit\": \"edit\",\n                            \"auto_refresh\": \"5\",\n                            \"skipFetch\": true,\n                            \"componentType\": \"view\",\n                            \"link\": null\n                        },\n                        \"autoPosition\": false,\n                        \"x\": \"5\",\n                        \"y\": \"8\",\n                        \"width\": \"7\",\n                        \"height\": \"8\"\n                    }\n                ]\n            }\n}\n"
+						},
+						"url": {
+							"raw": "{{url}}{{rest_endpoint}}/Dashboards",
+							"host": [
+								"{{url}}{{rest_endpoint}}"
+							],
+							"path": [
+								"Dashboards"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Create Signups",
+			"item": [
+				{
+					"name": "Signup Review - Approved",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"var idBack = jsonData.id;",
+									"",
+									"tests[\"Successful POST request\"] = responseCode.code === 200;",
+									"tests[\"id exists\"] = idBack !== null || idBack !== \"\";"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "OAuth-Token",
+								"value": "{{access_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "      {\n         \"name\":\"FakeL Lewishannah\",\n         \"description\":\"\",\n         \"deleted\":false,\n         \"salutation\":\"\",\n         \"first_name\":\"FakeL\",\n         \"last_name\":\"Lewishannah\",\n         \"full_name\":\"FakeL Lewishannah\",\n         \"title\":\"\",\n         \"facebook\":\"\",\n         \"twitter\":\"\",\n         \"googleplus\":\"\",\n         \"department\":\"\",\n         \"do_not_call\":false,\n         \"phone_home\":\"\",\n         \"phone_mobile\":\"123\",\n         \"phone_work\":\"\",\n         \"phone_other\":\"\",\n         \"phone_fax\":\"\",\n         \"primary_address_street\":\"30898 Duncan Extensions Fake St.\",\n         \"primary_address_street_2\":\"\",\n         \"primary_address_street_3\":\"\",\n         \"primary_address_city\":\"MI\",\n         \"primary_address_state\":\"MI\",\n         \"primary_address_postalcode\":\"34421\",\n         \"primary_address_country\":\"United States\",\n         \"alt_address_street\":\"\",\n         \"alt_address_street_2\":\"\",\n         \"alt_address_street_3\":\"\",\n         \"alt_address_city\":\"\",\n         \"alt_address_state\":\"\",\n         \"alt_address_postalcode\":\"\",\n         \"alt_address_country\":\"\",\n         \"assistant\":\"\",\n         \"assistant_phone\":\"\",\n         \"picture\":\"\",\n         \"ip_address\":\"33.106.173.169\",\n         \"ttl_fraud_check\":\"2022-04-26T17:36:21-04:00\",\n         \"score\":766,\n         \"status\":\"approved\",\n         \"ecomm_email\":\"fake_lewishannah@example.com\",\n         \"outcome\":\"approved\",\n         \"following\":false,\n         \"my_favorite\":false,\n         \"sync_key\":\"626857b56d9111a2d7672233ec\",\n         \"email1\":\"\",\n         \"email2\":\"\",\n         \"invalid_email\":\"\",\n         \"email_opt_out\":\"\",\n         \"email_addresses_non_primary\":\"\"\n      }"
+						},
+						"url": {
+							"raw": "{{url}}{{rest_endpoint}}/FD_SignupFraudDetection",
+							"host": [
+								"{{url}}{{rest_endpoint}}"
+							],
+							"path": [
+								"FD_SignupFraudDetection"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Signup Review - Blocked",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"var idBack = jsonData.id;",
+									"",
+									"tests[\"Successful POST request\"] = responseCode.code === 200;",
+									"tests[\"id exists\"] = idBack !== null || idBack !== \"\";"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "OAuth-Token",
+								"value": "{{access_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "      {\n         \"name\":\"Fake Shannah\",\n         \"description\":\"\",\n         \"deleted\":false,\n         \"salutation\":\"\",\n         \"first_name\":\"Fake\",\n         \"last_name\":\"Shannah\",\n         \"full_name\":\"Fake Shannah\",\n         \"title\":\"\",\n         \"facebook\":\"\",\n         \"twitter\":\"\",\n         \"googleplus\":\"\",\n         \"department\":\"\",\n         \"do_not_call\":false,\n         \"phone_home\":\"\",\n         \"phone_mobile\":\"123\",\n         \"phone_work\":\"\",\n         \"phone_other\":\"\",\n         \"phone_fax\":\"\",\n         \"primary_address_street\":\"898 do_not_call Fake St.\",\n         \"primary_address_street_2\":\"\",\n         \"primary_address_street_3\":\"\",\n         \"primary_address_city\":\"MI\",\n         \"primary_address_state\":\"MI\",\n         \"primary_address_postalcode\":\"34421\",\n         \"primary_address_country\":\"United States\",\n         \"alt_address_street\":\"\",\n         \"alt_address_street_2\":\"\",\n         \"alt_address_street_3\":\"\",\n         \"alt_address_city\":\"\",\n         \"alt_address_state\":\"\",\n         \"alt_address_postalcode\":\"\",\n         \"alt_address_country\":\"\",\n         \"assistant\":\"\",\n         \"assistant_phone\":\"\",\n         \"picture\":\"\",\n         \"ip_address\":\"22.333.173.169\",\n         \"ttl_fraud_check\":\"2022-04-26T17:36:21-04:00\",\n         \"score\":912,\n         \"status\":\"blocked\",\n         \"ecomm_email\":\"fake_lewishannah@example.com\",\n         \"outcome\":\"fraud\",\n         \"sync_key\":\"626857b56d9111333722ec\",\n         \"email1\":\"\",\n         \"email2\":\"\",\n         \"invalid_email\":\"\",\n         \"email_opt_out\":\"\",\n         \"email_addresses_non_primary\":\"\"\n      }"
+						},
+						"url": {
+							"raw": "{{url}}{{rest_endpoint}}/FD_SignupFraudDetection",
+							"host": [
+								"{{url}}{{rest_endpoint}}"
+							],
+							"path": [
+								"FD_SignupFraudDetection"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Signup New - Fraud",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"var idBack = jsonData.id;",
+									"",
+									"tests[\"Successful POST request\"] = responseCode.code === 200;",
+									"tests[\"id exists\"] = idBack !== null || idBack !== \"\";"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "OAuth-Token",
+								"value": "{{access_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "      {\n         \"name\":\"Fake Howardkaren\",\n         \"description\":\"\",\n         \"deleted\":false,\n         \"salutation\":\"\",\n         \"first_name\":\"Fake\",\n         \"last_name\":\"Howardkaren\",\n         \"full_name\":\"Fake Howardkaren\",\n         \"title\":\"\",\n         \"facebook\":\"\",\n         \"twitter\":\"\",\n         \"googleplus\":\"\",\n         \"department\":\"\",\n         \"do_not_call\":false,\n         \"phone_home\":\"\",\n         \"phone_mobile\":\"3444\",\n         \"phone_work\":\"\",\n         \"phone_other\":\"\",\n         \"phone_fax\":\"\",\n         \"primary_address_street\":\"1570 Nathan Road Fake St..\",\n         \"primary_address_street_2\":\"\",\n         \"primary_address_street_3\":\"\",\n         \"primary_address_city\":\"FL\",\n         \"primary_address_state\":\"FL\",\n         \"primary_address_postalcode\":\"34216\",\n         \"primary_address_country\":\"United States\",\n         \"alt_address_street\":\"\",\n         \"alt_address_street_2\":\"\",\n         \"alt_address_street_3\":\"\",\n         \"alt_address_city\":\"\",\n         \"alt_address_state\":\"\",\n         \"alt_address_postalcode\":\"\",\n         \"alt_address_country\":\"\",\n         \"assistant\":\"\",\n         \"assistant_phone\":\"\",\n         \"picture\":\"\",\n         \"ip_address\":\"95.182.61.171\",\n         \"ttl_fraud_check\":\"2022-04-26T17:36:21-04:00\",\n         \"score\":912,\n         \"status\":\"new\",\n         \"ecomm_email\":\"fake_howardkaren@example.com\",\n         \"outcome\":\"fraud\",\n         \"sync_key\":\"62642857b56d9111333722ec\",\n         \"email1\":\"\",\n         \"email2\":\"\",\n         \"invalid_email\":\"\",\n         \"email_opt_out\":\"\",\n         \"email_addresses_non_primary\":\"\"\n      }"
+						},
+						"url": {
+							"raw": "{{url}}{{rest_endpoint}}/FD_SignupFraudDetection",
+							"host": [
+								"{{url}}{{rest_endpoint}}"
+							],
+							"path": [
+								"FD_SignupFraudDetection"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Signup New - Review",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"var idBack = jsonData.id;",
+									"",
+									"tests[\"Successful POST request\"] = responseCode.code === 200;",
+									"tests[\"id exists\"] = idBack !== null || idBack !== \"\";"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "OAuth-Token",
+								"value": "{{access_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "      {\n         \"name\":\"Review William63\",\n         \"description\":\"\",\n         \"deleted\":false,\n         \"salutation\":\"\",\n         \"first_name\":\"Review\",\n         \"last_name\":\"William63\",\n         \"full_name\":\"Review William63\",\n         \"title\":\"\",\n         \"facebook\":\"\",\n         \"twitter\":\"\",\n         \"googleplus\":\"\",\n         \"department\":\"\",\n         \"do_not_call\":false,\n         \"phone_home\":\"\",\n         \"phone_mobile\":\"123\",\n         \"phone_work\":\"\",\n         \"phone_other\":\"\",\n         \"phone_fax\":\"\",\n         \"primary_address_street\":\"255 Christopher Neck Fake St.\",\n         \"primary_address_street_2\":\"\",\n         \"primary_address_street_3\":\"\",\n         \"primary_address_city\":\"MI\",\n         \"primary_address_state\":\"MI\",\n         \"primary_address_postalcode\":\"34002\",\n         \"primary_address_country\":\"United States\",\n         \"alt_address_street\":\"\",\n         \"alt_address_street_2\":\"\",\n         \"alt_address_street_3\":\"\",\n         \"alt_address_city\":\"\",\n         \"alt_address_state\":\"\",\n         \"alt_address_postalcode\":\"\",\n         \"alt_address_country\":\"\",\n         \"assistant\":\"\",\n         \"assistant_phone\":\"\",\n         \"picture\":\"\",\n         \"ip_address\":\"89.218.45.225\",\n         \"ttl_fraud_check\":\"2022-04-26T17:36:21-04:00\",\n         \"score\":424,\n         \"status\":\"new\",\n         \"ecomm_email\":\"review_william63@example.org\",\n         \"outcome\":\"review\",\n         \"following\":false,\n         \"my_favorite\":false,\n         \"sync_key\":\"626857ssssad341333722ec\",\n         \"email1\":\"\",\n         \"email2\":\"\",\n         \"invalid_email\":\"\",\n         \"email_opt_out\":\"\",\n         \"email_addresses_non_primary\":\"\"\n      }"
+						},
+						"url": {
+							"raw": "{{url}}{{rest_endpoint}}/FD_SignupFraudDetection",
+							"host": [
+								"{{url}}{{rest_endpoint}}"
+							],
+							"path": [
+								"FD_SignupFraudDetection"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Create Payment Transactions",
+			"item": [
+				{
+					"name": "Create Visa Transaction - Review",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"var idBack = jsonData.id;",
+									"",
+									"tests[\"Successful POST request\"] = responseCode.code === 200;",
+									"tests[\"id exists\"] = idBack !== null || idBack !== \"\";"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "OAuth-Token",
+								"value": "{{access_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\":\"Granta Mandaq\",\n    \"description\":\"\",\n    \"deleted\":false,\n    \"fd_transactionfrauddetect_type\":\"visa\",\n    \"lead_source\":\"\",\n    \"amount\":\"40.000000\",\n    \"amount_usdollar\":\"40.000000\",\n    \"date_closed\":\"\",\n    \"next_step\":\"\",\n    \"sales_stage\":\"\",\n    \"outcome\":\"review\",\n    \"status\":\"new\",\n    \"ttl_fraud_check\":\"2022-04-27T17:01:09-04:00\",\n    \"score\":566,\n    \"street\":\"\",\n    \"city\":\"\",\n    \"last_name\":\"Mandaq\",\n    \"state\":\"CO\",\n    \"postal_code\":\"31221\",\n    \"dob\":\"\",\n    \"occupation\":\"\",\n    \"txn_num\":\"6269a0f28ae4257d357520fe\",\n    \"cc_last_6\":\"424242\",\n    \"cc_month_year\":\"12/23\",\n    \"ecomm_email\":\"legit_grantamandaq@example.com\",\n    \"following\":false,\n    \"my_favorite\":false,\n    \"sync_key\":\"\",\n    \"currency_id\":\"-99\",\n    \"base_rate\":\"1.000000\",\n    \"currency_name\":\"\",\n    \"currency_symbol\":\"\"\n}"
+						},
+						"url": {
+							"raw": "{{url}}{{rest_endpoint}}/FD_TransactionFraudDetect",
+							"host": [
+								"{{url}}{{rest_endpoint}}"
+							],
+							"path": [
+								"FD_TransactionFraudDetect"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Mastercard Transaction - Review",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"var idBack = jsonData.id;",
+									"",
+									"tests[\"Successful POST request\"] = responseCode.code === 200;",
+									"tests[\"id exists\"] = idBack !== null || idBack !== \"\";"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "OAuth-Token",
+								"value": "{{access_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "\n      {\n         \"name\":\"FakeL Lewishannah\",\n         \"description\":\"\",\n         \"deleted\":false,\n         \"fd_transactionfrauddetect_type\":\"mastercard\",\n         \"lead_source\":\"\",\n         \"amount\":\"40.000000\",\n         \"amount_usdollar\":\"40.000000\",\n         \"date_closed\":\"\",\n         \"next_step\":\"\",\n         \"sales_stage\":\"\",\n         \"probability\":null,\n         \"outcome\":\"review\",\n         \"status\":\"new\",\n         \"ttl_fraud_check\":\"2022-04-26T17:40:55-04:00\",\n         \"score\":566,\n         \"street\":\"\",\n         \"city\":\"\",\n         \"last_name\":\"Lewishannah\",\n         \"state\":\"MI\",\n         \"postal_code\":\"\",\n         \"dob\":\"\",\n         \"occupation\":\"\",\n         \"txn_num\":\"626858d26d9111a2d76722ef\",\n         \"cc_last_6\":\"447576\",\n         \"cc_month_year\":\"12/27\",\n         \"ecomm_email\":\"fake_lewishannah@example.com\",\n         \"currency_id\":\"-99\",\n         \"base_rate\":\"1.000000\"\n      }"
+						},
+						"url": {
+							"raw": "{{url}}{{rest_endpoint}}/FD_TransactionFraudDetect",
+							"host": [
+								"{{url}}{{rest_endpoint}}"
+							],
+							"path": [
+								"FD_TransactionFraudDetect"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Discover Transaction - Fraud",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"var idBack = jsonData.id;",
+									"",
+									"tests[\"Successful POST request\"] = responseCode.code === 200;",
+									"tests[\"id exists\"] = idBack !== null || idBack !== \"\";"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "OAuth-Token",
+								"value": "{{access_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "      {\n         \"name\":\"fake dustin64\",\n         \"description\":\"\",\n         \"deleted\":false,\n         \"fd_transactionfrauddetect_type\":\"discover\",\n         \"lead_source\":\"\",\n         \"amount\":\"400.000000\",\n         \"amount_usdollar\":\"400.000000\",\n         \"date_closed\":\"\",\n         \"next_step\":\"\",\n         \"sales_stage\":\"\",\n         \"probability\":null,\n         \"outcome\":\"fraud\",\n         \"status\":\"blocked\",\n         \"ttl_fraud_check\":\"2022-04-26T17:37:52-04:00\",\n         \"score\":973,\n         \"street\":\"\",\n         \"city\":\"\",\n         \"last_name\":\"dustin64\",\n         \"state\":\"MI\",\n         \"postal_code\":\"\",\n         \"dob\":\"\",\n         \"occupation\":\"\",\n         \"txn_num\":\"6268581a6d9111a2d76722ed\",\n         \"cc_last_6\":\"560001\",\n         \"cc_month_year\":\"08/24\",\n         \"ecomm_email\":\"fake_dustin64@example.com\",\n         \"following\":false,\n         \"my_favorite\":false,\n         \"currency_id\":\"-99\",\n         \"base_rate\":\"1.000000\",\n         \"currency_name\":\"\"\n      }"
+						},
+						"url": {
+							"raw": "{{url}}{{rest_endpoint}}/FD_TransactionFraudDetect",
+							"host": [
+								"{{url}}{{rest_endpoint}}"
+							],
+							"path": [
+								"FD_TransactionFraudDetect"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Amex Transaction - Legit",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"var idBack = jsonData.id;",
+									"",
+									"tests[\"Successful POST request\"] = responseCode.code === 200;",
+									"tests[\"id exists\"] = idBack !== null || idBack !== \"\";"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "OAuth-Token",
+								"value": "{{access_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "      {\n         \"name\":\"legit dustin64\",\n         \"description\":\"\",\n         \"deleted\":false,\n         \"fd_transactionfrauddetect_type\":\"amex\",\n         \"lead_source\":\"\",\n         \"amount\":\"23.000000\",\n         \"amount_usdollar\":\"23.000000\",\n         \"date_closed\":\"\",\n         \"next_step\":\"\",\n         \"sales_stage\":\"\",\n         \"probability\":null,\n         \"outcome\":\"approved\",\n         \"status\":\"approved\",\n         \"ttl_fraud_check\":\"2022-04-26T17:37:52-04:00\",\n         \"score\":973,\n         \"street\":\"\",\n         \"city\":\"\",\n         \"last_name\":\"dustin64\",\n         \"state\":\"MI\",\n         \"postal_code\":\"\",\n         \"dob\":\"\",\n         \"occupation\":\"\",\n         \"txn_num\":\"6268581a6d9111a2d76722ed\",\n         \"cc_last_6\":\"560004\",\n         \"cc_month_year\":\"08/24\",\n         \"ecomm_email\":\"legit_dustin64@example.com\",\n         \"following\":false,\n         \"my_favorite\":false,\n         \"currency_id\":\"-99\",\n         \"base_rate\":\"1.000000\",\n         \"currency_name\":\"\"\n      }"
+						},
+						"url": {
+							"raw": "{{url}}{{rest_endpoint}}/FD_TransactionFraudDetect",
+							"host": [
+								"{{url}}{{rest_endpoint}}"
+							],
+							"path": [
+								"FD_TransactionFraudDetect"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Create SugarBPM Processes",
+			"item": [
+				{
+					"name": "Import Signup Process Definition",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"var idOfProcessDefinition = jsonData.project_import.id;",
+									"",
+									"tests[\"Successful POST request\"] = responseCode.code === 200;",
+									"tests[\"id exists\"] = idOfProcessDefinition !== null || idOfProcessDefinition !== \"\";",
+									"tests[\"successful project import\"] = true === jsonData.project_import.success;",
+									"tests[\"no br warnings\"] = false === jsonData.project_import.br_warning;",
+									"tests[\"no et warnings\"] = false === jsonData.project_import.et_warning;",
+									"",
+									"postman.setEnvironmentVariable(\"SignupProcessDefinitionId\", idOfProcessDefinition);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "OAuth-Token",
+								"value": "{{access_token}}"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "Signups_Fraud_Detection.bpm"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}{{rest_endpoint}}/pmse_Project/file/project_import",
+							"host": [
+								"{{url}}{{rest_endpoint}}"
+							],
+							"path": [
+								"pmse_Project",
+								"file",
+								"project_import"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Import Transaction Process Definition",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"var idOfProcessDefinition = jsonData.project_import.id;",
+									"",
+									"tests[\"Successful POST request\"] = responseCode.code === 200;",
+									"tests[\"id exists\"] = idOfProcessDefinition !== null || idOfProcessDefinition !== \"\";",
+									"tests[\"successful project import\"] = true === jsonData.project_import.success;",
+									"tests[\"no br warnings\"] = false === jsonData.project_import.br_warning;",
+									"tests[\"no et warnings\"] = false === jsonData.project_import.et_warning;",
+									"",
+									"postman.setEnvironmentVariable(\"TransactionProcessDefinitionId\", idOfProcessDefinition);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "OAuth-Token",
+								"value": "{{access_token}}"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "Transaction_Fraud_Detection.bpm"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}{{rest_endpoint}}/pmse_Project/file/project_import",
+							"host": [
+								"{{url}}{{rest_endpoint}}"
+							],
+							"path": [
+								"pmse_Project",
+								"file",
+								"project_import"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Enable Signup Process Definition",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"var idOfProcessDefinition = jsonData.id;",
+									"",
+									"tests[\"Successful POST request\"] = responseCode.code === 200;",
+									"tests[\"id exists\"] = idOfProcessDefinition !== null || idOfProcessDefinition !== \"\";",
+									"tests[\"project status is active\"] = \"ACTIVE\" === jsonData.prj_status;",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "OAuth-Token",
+								"value": "{{access_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"prj_status\": \"ACTIVE\"}"
+						},
+						"url": {
+							"raw": "{{url}}{{rest_endpoint}}/pmse_Project/{{SignupProcessDefinitionId}}",
+							"host": [
+								"{{url}}{{rest_endpoint}}"
+							],
+							"path": [
+								"pmse_Project",
+								"{{SignupProcessDefinitionId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Enable Transaciton Process Definition",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"var idOfProcessDefinition = jsonData.id;",
+									"",
+									"tests[\"Successful POST request\"] = responseCode.code === 200;",
+									"tests[\"id exists\"] = idOfProcessDefinition !== null || idOfProcessDefinition !== \"\";",
+									"tests[\"project status is active\"] = \"ACTIVE\" === jsonData.prj_status;",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "OAuth-Token",
+								"value": "{{access_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"prj_status\": \"ACTIVE\"}"
+						},
+						"url": {
+							"raw": "{{url}}{{rest_endpoint}}/pmse_Project/{{TransactionProcessDefinitionId}}",
+							"host": [
+								"{{url}}{{rest_endpoint}}"
+							],
+							"path": [
+								"pmse_Project",
+								"{{TransactionProcessDefinitionId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
