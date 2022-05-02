@@ -1,6 +1,13 @@
-# Sugar CRM x Amazon Fraud Detector
+# Adding AWS powered fraud detection to Sugar Sell
 
-SugarCRM Amazon Fraud Detector has been split in two disticnt projects.
+This open source project is the result of our blog series 
+
+* [Adding AWS powered fraud detection to Sugar Sell](https://sugarclub.sugarcrm.com/dev-club/b/dev-blog/posts/adding-aws-powered-real_2d00_time-fraud-detection-to-sugar-sell).
+* [Adding AWS powered fraud detection to Sugar Sell - Part 2](https://sugarclub.sugarcrm.com/dev-club/b/dev-blog/posts/adding-aws-powered-fraud-detection-to-sugarcrm-part-2)
+* [Adding AWS powered fraud detection to Sugar Sell - Part 3](https://sugarclub.sugarcrm.com/dev-club/b/dev-blog/posts/adding-aws-powered-fraud-detection-to-sugar-sell---part-3)
+* [Adding AWS powered fraud detection to Sugar Sell - Conclusion](https://sugarclub.sugarcrm.com/dev-club/b/dev-blog/posts/adding-aws-powered-fraud-detection-to-sugar-sell---conclusion)
+
+## Projects
 
 * [fraud-detector-app](./fraud-detector-app/README.md) contains our AWS NodeJS App responsible to create all supporting resources for this project in AWS.
 * [sugar-package](./fraud-detector-app/) contains our Sugar resources such as MLP code and Postman collection to insert necessary DB/Config/BPM onto Sugar instance.
