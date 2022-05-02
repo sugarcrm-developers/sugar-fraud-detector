@@ -10,7 +10,7 @@ Pull requests are accepted under the discretion of the Sugar-Fraud-Detector main
 
 ## REQUIREMENTS
 
-- By creating a pull request, you are agreeing to [SugarCRM Open Source Contributor terms](docs/CONTRIBUTOR_TERMS.pdf).
+- By creating a pull request, you are agreeing to [SugarCRM Open Source Contributor terms](../docs/CONTRIBUTOR_TERMS.pdf).
 
 ## GUIDELINES
 
